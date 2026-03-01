@@ -26,19 +26,17 @@ def init_chat_session():
         return weather_tool.execute(location)
     
     try:
+        instruct_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "system_instruction.txt")
+        with open(instruct_path, "r", encoding="utf-8") as f:
+            sys_instruct = f.read()
+
         gemini_client = genai.Client(api_key=api_key)
         chat_session = gemini_client.chats.create(
             model="gemini-2.5-flash",
             config=types.GenerateContentConfig(
                 tools=[get_weather],
                 temperature=0.7,
-                system_instruction=(
-                    "You are a helpful and knowledgeable travel personal assistant. "
-                    "You possess vast general knowledge about the world, including tourist attractions, history, and geography. Feel free to answer general questions using your internal knowledge base. "
-                    "In addition, you have access to two specific tools when needed: "
-                    "1. A Weather analyzer to fetch live, real-time outdoor data. "
-                    "Only invoke tools if the user is asking for live weather. Otherwise, answer conversationally."
-                )
+                system_instruction=sys_instruct
             )
         )
         print("✅ Gemini Chat Session Initialized Successfully")
