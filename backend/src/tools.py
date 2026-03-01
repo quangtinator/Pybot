@@ -25,7 +25,7 @@ class WeatherTool(BaseTool):
     def execute(self, location: str) -> str:
         """
         Fetches the current real-time weather and detailed conditions for a given city.
-        Returns temperature, feels like, wind, precipitation, and UV index.
+        Returns temperature, feels like, wind, humidity, precipitation, and UV index.
         Use this tool when the user asks about weather, temperature, or if they need an umbrella.
         """
         api_key = os.getenv("WEATHER_API_KEY")
@@ -40,11 +40,15 @@ class WeatherTool(BaseTool):
             response.raise_for_status() 
             data = response.json()['current']
             
+            # weather details
             return (
                 f"Weather Data for {location.title()}:\n"
                 f"- Condition: {data['condition']['text']}\n"
-                f"- Temperature: {data['temp_c']}°C\n"
+                f"- Temperature: {data['temp_c']}°C (Feels like: {data['feelslike_c']}°C)\n"
+                f"- Wind Speed: {data['wind_kph']} km/h\n"
+                f"- Humidity: {data['humidity']}%\n"
                 f"- Precipitation: {data['precip_mm']} mm\n"
+                f"- UV Index: {data['uv']}\n"
             )
         except Exception as e:
             return f"Weather tool failed: {e}"
