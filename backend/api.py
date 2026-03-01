@@ -7,28 +7,37 @@ from dotenv import load_dotenv
 from google import genai
 from google.genai import types
 
-from src.external_services import get_live_weather
+from src.tools import WeatherTool
 
 load_dotenv()
 
-# Global storage
+# global storage
 gemini_client = None
 chat_session = None
 
 def init_chat_session():
     global gemini_client, chat_session
     api_key = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
+    
+    # init tool instantces
+    weather_tool = WeatherTool()
+    
+    def get_weather(location: str) -> str:
+        return weather_tool.execute(location)
+    
     try:
         gemini_client = genai.Client(api_key=api_key)
         chat_session = gemini_client.chats.create(
             model="gemini-2.5-flash",
             config=types.GenerateContentConfig(
-                tools=[get_live_weather],
+                tools=[get_weather],
                 temperature=0.7,
                 system_instruction=(
-                    "You are a helpful travel personal assistant. Use the tools provided to get live data. "
-                    "If the user asks about weather, use the get_live_weather tool, analyze the detailed results "
-                    "and provide packing recommendations based on those details."
+                    "You are a helpful and knowledgeable travel personal assistant. "
+                    "You possess vast general knowledge about the world, including tourist attractions, history, and geography. Feel free to answer general questions using your internal knowledge base. "
+                    "In addition, you have access to two specific tools when needed: "
+                    "1. A Weather analyzer to fetch live, real-time outdoor data. "
+                    "Only invoke tools if the user is asking for live weather. Otherwise, answer conversationally."
                 )
             )
         )
@@ -40,7 +49,6 @@ def init_chat_session():
 async def lifespan(app: FastAPI):
     init_chat_session()
     yield
-    
 
 app = FastAPI(title="AI Travel Assistant API", lifespan=lifespan)
 
@@ -60,11 +68,9 @@ def chat_endpoint(request: ChatRequest):
     global chat_session
     if not chat_session:
         raise HTTPException(status_code=500, detail="Chat session not initialized.")
-    
     try:
         response = chat_session.send_message(request.message)
         return {"reply": response.text}
-        
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
