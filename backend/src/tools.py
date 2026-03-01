@@ -1,6 +1,7 @@
 import os
 import requests
 from abc import ABC, abstractmethod
+from pypdf import PdfReader
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -22,6 +23,11 @@ class WeatherTool(BaseTool):
     description = "Fetches real-time weather data from WeatherAPI."
 
     def execute(self, location: str) -> str:
+        """
+        Fetches the current real-time weather and detailed conditions for a given city.
+        Returns temperature, feels like, wind, precipitation, and UV index.
+        Use this tool when the user asks about weather, temperature, or if they need an umbrella.
+        """
         api_key = os.getenv("WEATHER_API_KEY")
         if not api_key:
             return "Error: WEATHER_API_KEY missing."
@@ -42,3 +48,44 @@ class WeatherTool(BaseTool):
             )
         except Exception as e:
             return f"Weather tool failed: {e}"
+
+class DocumentTool(BaseTool):
+    name = "DocumentTool"
+    description = "Scans and extracts text from local PDF, TXT, and MD files."
+
+    def execute(self) -> str:
+        """
+        Reads all static personal documents from the user's data folder.
+        USE THIS TOOL ONLY when the user asks about their personal itineraries, schedules, travel guides, or trip advertisements.
+        """
+        print("\n[TOOL CALLED: DocumentTool] -> Scanning personal files...")
+        
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        data_dir = os.path.abspath(os.path.join(current_dir, "..", "..", "data"))
+        
+        if not os.path.exists(data_dir):
+            return "No personal documents found on disk."
+
+        combined_text = "Here is the content of the user's personal documents:\n\n"
+        
+        for filename in os.listdir(data_dir):
+            filepath = os.path.join(data_dir, filename)
+            
+            # read txt or md
+            if filename.endswith((".txt", ".md")):
+                try:
+                    with open(filepath, "r", encoding="utf-8") as f:
+                        combined_text += f"--- {filename} ---\n{f.read()}\n\n"
+                except Exception as e:
+                    print(f"Failed to read text file {filename}: {e}")
+                    
+            # read pdf
+            elif filename.endswith(".pdf"):
+                try:
+                    reader = PdfReader(filepath)
+                    text = "".join(page.extract_text() + "\n" for page in reader.pages)
+                    combined_text += f"--- {filename} ---\n{text}\n\n"
+                except Exception as e:
+                    print(f"Failed to read PDF {filename}: {e}")
+
+        return combined_text

@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from google import genai
 from google.genai import types
 
-from src.tools import WeatherTool
+from src.tools import WeatherTool, DocumentTool
 
 load_dotenv()
 
@@ -21,20 +21,24 @@ def init_chat_session():
     
     # init tool instantces
     weather_tool = WeatherTool()
+    doc_tool = DocumentTool()
     
     def get_weather(location: str) -> str:
         return weather_tool.execute(location)
+        
+    def read_user_documents() -> str:
+        return doc_tool.execute()
     
     try:
         instruct_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "system_instruction.txt")
         with open(instruct_path, "r", encoding="utf-8") as f:
             sys_instruct = f.read()
-
+            
         gemini_client = genai.Client(api_key=api_key)
         chat_session = gemini_client.chats.create(
             model="gemini-2.5-flash",
             config=types.GenerateContentConfig(
-                tools=[get_weather],
+                tools=[get_weather, read_user_documents],
                 temperature=0.7,
                 system_instruction=sys_instruct
             )
@@ -47,6 +51,7 @@ def init_chat_session():
 async def lifespan(app: FastAPI):
     init_chat_session()
     yield
+    
 
 app = FastAPI(title="AI Travel Assistant API", lifespan=lifespan)
 
@@ -66,9 +71,11 @@ def chat_endpoint(request: ChatRequest):
     global chat_session
     if not chat_session:
         raise HTTPException(status_code=500, detail="Chat session not initialized.")
+    
     try:
         response = chat_session.send_message(request.message)
         return {"reply": response.text}
+        
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
