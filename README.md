@@ -1,4 +1,4 @@
-# ✈️ Pybot: AI Travel & Packing Assistant
+﻿# Pybot: AI Travel & Packing Assistant
 
 > _An intelligent AI Travel Assistant powering dynamic multi-modal data processing and interactive real-time tools._
 
@@ -8,7 +8,7 @@ Pybot is a full-stack, agentic AI travel assistant built as a technical intervie
 
 ---
 
-## 🏗️ Architecture & Stack
+## Architecture & Stack
 
 To demonstrate production-level maturity, this project adopts a **Decoupled Architecture** rather than a monolithic script.
 
@@ -16,10 +16,10 @@ To demonstrate production-level maturity, this project adopts a **Decoupled Arch
 - **Backend:** Python + FastAPI. Acts as a secure middleware layer, managing the LLM connection, CORS, and Pydantic input validation to prevent malformed requests.
 - **AI Engine:** Google Gemini (via the official \google-genai\ SDK), utilizing **Native Tool Calling**.
 
-## 🧠 Core Design Decisions & Assumptions
+## Core Design Decisions & Assumptions
 
 1.  **The Strategy Pattern (Agent Tooling):**
-    Instead of procedural, hard-coded API scripts, the backend relies on an Object-Oriented interface (\BaseTool\ in \ ools.py\). This adheres to the **Open/Closed Principle**—the system is open to infinite new tools (Booking, Weather, Currency) without ever needing to modify the core \pi.py\ engine logic.
+    Instead of procedural, hard-coded API scripts, the backend relies on an Object-Oriented interface (\BaseTool\ in \ ools.py\). This adheres to the **Open/Closed Principle**the system is open to infinite new tools (Booking, Weather, Currency) without ever needing to modify the core \pi.py\ engine logic.
 2.  **Multi-Modal Handing vs. Vector DBs:**
     The prompt required reading static multi-modal files. Given the small scope of personal travel documents, building a full Vector Database (Chroma/Pinecone) was deemed over-engineered. Instead, Pybot uses a dynamic script to extract text/binary from \.txt\, \.md\, and \.pdf\ files on demand and injects them securely into the LLM's context window.
 3.  **Local vs. External Tools:**
@@ -29,19 +29,19 @@ To demonstrate production-level maturity, this project adopts a **Decoupled Arch
 
 ---
 
-## 🚀 Key Features Capabilities
+## Key Features Capabilities
 
 The agent decides _autonomously_ which tools to use based on the user's prompt:
 
-- **📄 Document Reader:** Parses local itineraries, Visa rules, and budgets.
-- **🌦️ Live Weather & Packing:** Fetches real-time weather and enforces logical clothing constraints (e.g., suggesting umbrellas if \precip_mm > 0\).
-- **💱 Currency Converter:** Fetches live forex rates without an API key.
-- **🕒 Time Awareness:** Uses system time to overcome the standard LLM "time hallucination" flaw.
-- **🧳 Mock Booking Db:** Retrieves real-time status of flights and hotels.
+- ** Document Reader:** Parses local itineraries, Visa rules, and budgets.
+- ** Live Weather & Packing:** Fetches real-time weather and enforces logical clothing constraints (e.g., suggesting umbrellas if \precip_mm > 0\).
+- ** Currency Converter:** Fetches live forex rates without an API key.
+- ** Time Awareness:** Uses system time to overcome the standard LLM "time hallucination" flaw.
+- ** Mock Booking Db:** Retrieves real-time status of flights and hotels.
 
 ---
 
-## ⚙️ How to Run Locally
+## How to Run Locally
 
 ### Prerequisites
 
@@ -52,37 +52,43 @@ The agent decides _autonomously_ which tools to use based on the user's prompt:
 ### Step 1: Environment Setup
 
 1. Clone the repository.
-2. Navigate to the \ackend/\ folder and create a \.env\ file.
-3. Add your keys to the \.env\ file:
-   \\\ini
+2. Navigate to the `backend/` folder and create a `.env` file.
+3. Add your keys to the `.env` file:
+   ```ini
    GOOGLE_API_KEY=your_gemini_key_here
    WEATHER_API_KEY=your_weatherapi_key_here
-   \\\`n
+   ```
 
 ### Step 2: Start the Backend (Terminal 1)
 
 Open a terminal, create your virtual environment, install dependencies, and start FastAPI.
 _(Commands shown for Windows environments)_
-\\\powershell
+
+```powershell
 cd backend
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 python api.py
-\\\`n\*The backend is now running on \http://127.0.0.1:8000\*
+```
+
+_The backend is now running on `http://127.0.0.1:8000`_
 
 ### Step 3: Start the Frontend (Terminal 2)
 
 Open a **new** terminal, install Node packages, and start the Vite dev server:
-\\\powershell
+
+```powershell
 cd frontend
 npm install
 npm run dev
-\\\`n*Click the \http://localhost:5173\ link to open the UI in your browser.*
+```
+
+_Click the `http://localhost:5173` link to open the UI in your browser._
 
 ---
 
-## 🧪 Example Prompts to Test
+## Example Prompts to Test
 
 To see the Agent's multi-step reasoning capabilities, copy and paste these exact prompts into the chat UI:
 
