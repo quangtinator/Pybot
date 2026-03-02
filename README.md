@@ -1,5 +1,9 @@
 # ✈️ Pybot: AI Travel & Packing Assistant
 
+> _An intelligent AI Travel Assistant powering dynamic multi-modal data processing and interactive real-time tools._
+
+![Pybot Chat UI](./assets/demo.png)
+
 Pybot is a full-stack, agentic AI travel assistant built as a technical interview demonstration. It leverages the Google Gemini AI to intelligently process natural language, read local user documents (PDF, TXT, MD), and dynamically trigger external APIs to provide personalized travel, budget, and packing advice.
 
 ---
