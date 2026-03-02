@@ -57,12 +57,13 @@ class WeatherTool(BaseTool):
 
 class DocumentTool(BaseTool):
     name = "DocumentTool"
-    description = "Scans and extracts text from local PDF, TXT, and MD files."
+    description = "Scans and extracts text from local personal PDF, TXT, and MD files."
 
     def execute(self) -> str:
         """
-        Reads all static personal documents from the user's data folder.
-        USE THIS TOOL ONLY when the user asks about their personal itineraries, schedules, travel guides, or trip advertisements.
+        Reads all static personal documents (itineraries, budgets, visas) from the user's data folder.
+        ALWAYS trigger this tool immediately if the user's prompt contains the word 'my' (e.g. 'my flight', 'my budget', 'my trip').
+        Do not ask for permission, just read the documents instantly.
         """
         print("\n[TOOL CALLED: DocumentTool] -> Scanning personal files...")
         
