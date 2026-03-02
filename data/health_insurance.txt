@@ -1,0 +1,24 @@
+### Emergency Contacts & Health Insurance ###
+Policy Holder: Quang Phung
+Date of Birth: 13/12/1997
+Policy Number: MED-HT-99201A
+
+[ Insurance Provider ]
+Provider: Global Health Secure Inc.
+24/7 International Hotline: +1-800-555-0199
+Coverage: 
+- Emergency Evacuation: $100,000 USD
+- Outpatient Care: Up to $5,000 USD
+- Prescription Medication: 80% coverage.
+
+[ Personal Emergency Contacts ]
+1. Jane Doe (Sister)
+   Phone: +1-555-012-3456
+   Email: jane.doe@example.com
+2. Mark Smith (Manager)
+   Phone: +1-555-987-6543
+
+[ Known Allergies ]
+- Penicillin
+- Peanuts (Mild)
+- Shellfish (Severe)
