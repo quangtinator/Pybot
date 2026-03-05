@@ -49,7 +49,7 @@ def create_chat_session():
             )
         )
         print("✅ Gemini Chat Session Initialized Successfully")
-        return chat_session
+        return gemini_client, chat_session
     except Exception as e:
         print(f"❌ Failed to initialize Gemini: {e}")
-        return None
+        return None, None

@@ -1,4 +1,3 @@
-import os
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -11,7 +10,9 @@ load_dotenv()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    app.state.chat_session = create_chat_session()
+    client, session = create_chat_session()
+    app.state.gemini_client = client
+    app.state.chat_session = session
     yield
     
 
