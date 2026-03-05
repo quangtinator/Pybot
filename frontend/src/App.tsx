@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import ReactMarkdown from "react-markdown";
 import "./App.css";
 
 function App() {
@@ -6,7 +7,7 @@ function App() {
     {
       role: "assistant",
       content:
-        "Hello! I am Pybot, your Travel Assistant. Ask me about the weather anywhere, or what to pack!",
+        'Hello! I\'m Pybot, your personal AI Travel Assistant! 🌍\n\nI can help you plan and manage your trips. You can ask me to:\n• ⛅ Check the live weather anywhere\n• 💱 Convert live currencies\n• 🛩️ Look up your flight and hotel bookings\n• 📄 Check your personal documents (just ask me to read "my itinerary"!)\n\nHow can I help you today?',
     },
   ]);
   const [input, setInput] = useState("");
@@ -121,7 +122,13 @@ function App() {
                 {msg.role === "user" ? "You" : "AI Assistant"}
               </div>
 
-              {msg.content}
+              {msg.role === "user" ? (
+                msg.content
+              ) : (
+                <div className="markdown-container">
+                  <ReactMarkdown>{msg.content}</ReactMarkdown>
+                </div>
+              )}
             </div>
           </div>
         ))}
