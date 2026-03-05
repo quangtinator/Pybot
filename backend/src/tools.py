@@ -5,6 +5,7 @@ import pytz
 from abc import ABC, abstractmethod
 from pypdf import PdfReader
 from dotenv import load_dotenv
+from src.mock_db import mock_db
 
 load_dotenv()
 
@@ -129,9 +130,6 @@ class SetupMockBookingTool(BaseTool):
         Use this when the user asks about their reservations, flight status, or hotel details.
         """
         print(f"\n[TOOL CALLED: SetupMockBookingTool] -> Checking bookings for {destination}")
-        
-        # A robust simulated database mimicking a real trip reservation system
-        from src.mock_db import mock_db
         
         dest_key = destination.lower().strip()
         
