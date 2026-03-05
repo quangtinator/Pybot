@@ -1,1 +1,19 @@
+/* App.css */
+.markdown-container * {
+  margin-top: 0;
+  margin-bottom: 0.5em;
+}
 
+.markdown-container *:last-child {
+  margin-bottom: 0;
+}
+
+.markdown-container ul,
+.markdown-container ol {
+  padding-left: 20px;
+}
+
+.markdown-container strong {
+  font-weight: 700;
+  color: #fff;
+}
